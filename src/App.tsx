@@ -1,12 +1,14 @@
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import handleSubmit from "./handles/handle";
 
 function App() {
   const [inputText, setInputText] = useState("");
   const [heading, setHeading] = useState("");
-  const [todos, setTodos] = useState<any>([]);
+  // const [todos, setTodos] = useState<any>([]);
+  const todosRef = useRef<any>([]);
 
   const handleOnChangeText = (event: any) => {
     setInputText(event.target.value);
@@ -18,8 +20,8 @@ function App() {
 
   const handleSubmitNote = (event: any) => {
     event.preventDefault();
-    setTodos([
-      ...todos,
+    todosRef.current = [
+      ...todosRef.current,
       {
         heading: heading,
         text: inputText,
@@ -28,23 +30,23 @@ function App() {
         dateCreated: new Date().toUTCString().slice(5, 16),
         timeCreated: new Date().getHours() + ":" + new Date().getMinutes(),
       },
-    ]);
+    ];
     setInputText("");
     setHeading("");
+    handleSubmit(todosRef.current);
   };
 
-  const noteList = todos.map((note: any) => {
-    
-    return (
-      <div key={note.id} className="flex-col bg-blue-200 rounded-lg p-4">
-        <div className="font-bold">{note.heading}</div>
-        <div>{note.text}</div>
-        <div className="text-xs text-gray-400 mt-1">
-          {note.dateCreated.toString()} • {note.timeCreated.toString()}
-        </div>
-      </div>
-    );
-  });
+  // const noteList = todos.map((note: any) => {
+  //   return (
+  //     <div key={note.id} className="flex-col bg-blue-200 rounded-lg p-4">
+  //       <div className="font-bold">{note.heading}</div>
+  //       <div>{note.text}</div>
+  //       <div className="text-xs text-gray-400 mt-1">
+  //         {note.dateCreated.toString()} • {note.timeCreated.toString()}
+  //       </div>
+  //     </div>
+  //   );
+  // });
 
   return (
     <>
@@ -89,7 +91,7 @@ function App() {
         <div className="text-gray-400 mb-2">Your Notes</div>
         <hr />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
-          {noteList}
+          {/* {noteList} */}
         </div>
       </section>
     </>
