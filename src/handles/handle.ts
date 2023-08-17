@@ -1,4 +1,4 @@
-import { addDoc, collection } from "@firebase/firestore";
+import { addDoc, collection  } from "@firebase/firestore";
 import { firestore } from "../firebase/firebase";
 
 const handleSubmit = (testdata: any) => {
