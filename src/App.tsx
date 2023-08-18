@@ -1,13 +1,22 @@
 import avatar from "./assets/ai_gen_img.jpg";
 import nbLogo from "./assets/nbLogo.svg";
 import "./App.css";
-import { useState, useRef } from "react";
-import handleSubmit from "./handles/handle";
+import { useState, useRef, useEffect } from "react";
+import sendData from "./handles/sendData";
+import getData from "./handles/getData";
+import NoteListComponent from "./components/NoteListComponent";
 
 function App() {
   const [inputText, setInputText] = useState("");
   const [heading, setHeading] = useState("");
   const todosRef = useRef<any>([]);
+  const [noteData, setNoteData] = useState<any>([]);
+
+  useEffect(() => {
+    getData().then((data) => {
+      setNoteData(data);
+    });
+  }, []);
 
   const handleOnChangeText = (event: any) => {
     setInputText(event.target.value);
@@ -17,41 +26,39 @@ function App() {
     setHeading(event.target.value);
   };
 
-  const handleSubmitNote = (event: any) => {
+  const handleSubmitNote = async (event: any) => {
     event.preventDefault();
-    todosRef.current = [
-      ...todosRef.current,
-      {
-        heading: heading,
-        text: inputText,
-        completed: false,
-        id: Math.random(),
-        dateCreated: new Date().toUTCString().slice(5, 16),
-        timeCreated: new Date().getHours() + ":" + new Date().getMinutes(),
-      },
-    ];
+    const newNote = {
+      heading: heading,
+      text: inputText,
+      completed: false,
+      id: Math.random(),
+      dateCreated: new Date().toUTCString().slice(5, 16),
+      timeCreated: new Date().getHours() + ":" + new Date().getMinutes(),
+    };
+
+    setNoteData((prevNoteData: any) => [
+      { testData: [newNote] },
+      ...prevNoteData,
+    ]);
+
+    todosRef.current = [newNote, ...todosRef.current];
+
     setInputText("");
     setHeading("");
-    handleSubmit(todosRef.current);
-  };
 
-  // const noteList = todos.map((note: any) => {
-  //   return (
-  //     <div key={note.id} className="flex-col bg-blue-200 rounded-lg p-4">
-  //       <div className="font-bold">{note.heading}</div>
-  //       <div>{note.text}</div>
-  //       <div className="text-xs text-gray-400 mt-1">
-  //         {note.dateCreated.toString()} • {note.timeCreated.toString()}
-  //       </div>
-  //     </div>
-  //   );
-  // });
+    await sendData(todosRef.current);
+
+    getData().then((data) => {
+      setNoteData(data);
+    });
+  };
 
   return (
     <>
       <nav className="bg-blue-500 flex p-4 justify-between lg:px-12 sticky top-0">
         <div className="flex justify-center items-center gap-1">
-          <img src={nbLogo} alt="viteLogo" className="w-6" />
+          <img src={nbLogo} alt="viteLogo" className="w-4" />
           <div className="font-bold text-white text-xl">NoteBook</div>
         </div>
         <div className=" p-1 rounded-full cursor-pointer w-14">
@@ -90,7 +97,7 @@ function App() {
         <div className="text-gray-400 mb-2">Your Notes</div>
         <hr />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
-          {/* {noteList} */}
+          <NoteListComponent noteData={noteData} />
         </div>
       </section>
     </>
