@@ -10,6 +10,7 @@ function NoteListComponent({ noteData }: any) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
       {noteData.map((item: any) => {
+        if (!item.testData) return null; // check if testData is defined
         const innerTestData = item.testData;
         const innerElements = innerTestData.map((data: any) => (
           <div

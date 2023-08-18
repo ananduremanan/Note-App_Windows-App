@@ -28,6 +28,7 @@ function App() {
 
   const handleSubmitNote = async (event: any) => {
     event.preventDefault();
+    if (heading === "" || inputText === "") return;
     const newNote = {
       heading: heading,
       text: inputText,
@@ -37,17 +38,13 @@ function App() {
       timeCreated: new Date().getHours() + ":" + new Date().getMinutes(),
     };
 
-    setNoteData((prevNoteData: any) => [
-      { testData: [newNote] },
-      ...prevNoteData,
-    ]);
-
     todosRef.current = [newNote, ...todosRef.current];
-
     setInputText("");
     setHeading("");
-
     await sendData(todosRef.current);
+    getData().then((data) => {
+      setNoteData(data);
+    });
   };
 
   return (
