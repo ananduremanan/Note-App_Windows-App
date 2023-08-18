@@ -48,10 +48,6 @@ function App() {
     setHeading("");
 
     await sendData(todosRef.current);
-
-    getData().then((data) => {
-      setNoteData(data);
-    });
   };
 
   return (
@@ -96,7 +92,7 @@ function App() {
       <section className="p-4 lg:px-12 overflow-hidden">
         <div className="text-gray-400 mb-2">Your Notes</div>
         <hr />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+        <div className="mt-2">
           <NoteListComponent noteData={noteData} />
         </div>
       </section>
