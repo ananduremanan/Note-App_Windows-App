@@ -9,8 +9,8 @@ function NoteListComponent({ noteData }: any) {
 
   // Sort the noteData array based on the timeCreated property
   const sortedNoteData = [...noteData].sort((a: any, b: any) => {
-    const timeA = a.testData[0].timeCreated;
-    const timeB = b.testData[0].timeCreated;
+    const timeA = a.testData[0]?.timeCreated || "";
+    const timeB = b.testData[0]?.timeCreated || "";
     return timeB.localeCompare(timeA);
   });
 
