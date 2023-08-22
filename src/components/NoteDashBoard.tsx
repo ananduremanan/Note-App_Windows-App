@@ -1,10 +1,9 @@
-import avatar from "../assets/ai_gen_img.jpg";
-import nbLogo from "../assets/nbLogo.svg";
 import "../App.css";
 import { useState, useRef, useEffect } from "react";
 import sendData from "../handles/sendData";
 import getData from "../handles/getData";
 import NoteListComponent from "../components/NoteListComponent";
+import NavBar from "./UI/NavBar";
 
 function NoteDashBoard() {
   const [inputText, setInputText] = useState("");
@@ -57,25 +56,17 @@ function NoteDashBoard() {
     setNoteData(todosRef.current);
   };
 
-  // const handleResetNote = () => {
-  //   setInputText("");
-  //   setHeading("");
-  //   setNoteData([]);
-  //   todosRef.current = [];
-  //   sendData(todosRef.current);
-  // };
+  const handleResetNote = () => {
+    setInputText("");
+    setHeading("");
+    setNoteData([]);
+    todosRef.current = [];
+    sendData(todosRef.current);
+  };
 
   return (
     <>
-      <nav className="bg-blue-500 flex p-4 justify-between lg:px-12 sticky top-0">
-        <div className="flex justify-center items-center gap-1">
-          <img src={nbLogo} alt="viteLogo" className="w-4" />
-          <div className="font-bold text-white text-xl">NoteBook</div>
-        </div>
-        <div className=" p-1 rounded-full cursor-pointer w-14">
-          <img src={avatar} alt="" className="rounded-full border" />
-        </div>
-      </nav>
+      <NavBar />
       <section className="overflow-hidden">
         <div className="p-4 lg:px-12 w-screen">
           <input
@@ -100,9 +91,9 @@ function NoteDashBoard() {
             </button>
             <button
               className="bg-blue-400 rounded-lg p-2 text-white hover:font-bold hover:bg-blue-500"
-              // onClick={handleResetNote}
+              onClick={handleResetNote}
             >
-              Reset
+              Clear
             </button>
           </div>
         </div>
