@@ -13,9 +13,16 @@ function App() {
   const [noteData, setNoteData] = useState<any>([]);
 
   useEffect(() => {
-    getData().then((data) => {
-      setNoteData(data);
-    });
+    let unsubscribe: any;
+    const fetchData = async () => {
+      unsubscribe = await getData(setNoteData);
+    };
+    fetchData();
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   const handleOnChangeText = (event: any) => {
@@ -35,16 +42,19 @@ function App() {
       completed: false,
       id: Math.random(),
       dateCreated: new Date().toUTCString().slice(5, 16),
-      timeCreated: new Date().getHours() + ":" + new Date().getMinutes(),
+      timeCreated:
+        new Date().getHours() +
+        ":" +
+        new Date().getMinutes() +
+        ":" +
+        new Date().getSeconds(),
     };
 
-    todosRef.current = [newNote, ...todosRef.current];
+    todosRef.current = [newNote];
     setInputText("");
     setHeading("");
     await sendData(todosRef.current);
-    getData().then((data) => {
-      setNoteData(data);
-    });
+    setNoteData(todosRef.current);
   };
 
   return (

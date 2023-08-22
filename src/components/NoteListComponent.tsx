@@ -7,9 +7,16 @@ function NoteListComponent({ noteData }: any) {
     );
   }
 
+  // Sort the noteData array based on the timeCreated property
+  const sortedNoteData = [...noteData].sort((a: any, b: any) => {
+    const timeA = a.testData[0].timeCreated;
+    const timeB = b.testData[0].timeCreated;
+    return timeB.localeCompare(timeA);
+  });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-      {noteData.map((item: any) => {
+      {sortedNoteData.map((item: any) => {
         if (!item.testData) return null; // check if testData is defined
         const innerTestData = item.testData;
         const innerElements = innerTestData.map((data: any) => (
@@ -20,12 +27,13 @@ function NoteListComponent({ noteData }: any) {
             <div className="font-bold">{data.heading}</div>
             <div>{data.text}</div>
             <div className="text-xs text-gray-400 mt-1">
-              {data.dateCreated.toString()} • {data.timeCreated.toString()}
+              {data.dateCreated ? data.dateCreated.toString() : "N/A"} •{" "}
+              {data.timeCreated ? data.timeCreated.toString() : "N/A"}
             </div>
           </div>
         ));
 
-        return innerElements;
+        return <div key={item.id}>{innerElements}</div>;
       })}
     </div>
   );
